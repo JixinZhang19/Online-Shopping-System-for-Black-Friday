@@ -16,6 +16,11 @@ import org.springframework.web.bind.annotation.*;
 import java.util.Objects;
 import java.util.UUID;
 
+
+
+
+
+
 @RestController
 @RequestMapping("/account")
 public class UserController {
@@ -25,7 +30,7 @@ public class UserController {
     @Autowired
     UserService userService;
 
-    @PostMapping("/create")
+    @PostMapping
     public ResponseEntity<SkillUpResponse> createUser(@RequestBody UserInDto userInDto) {
         UserDomain userDomain;
         // function: insert data into user table
@@ -196,7 +201,7 @@ public class UserController {
 
 
 
-
+    // general function
     public UserDomain toDomain(UserInDto userInDto) {
         return UserDomain
                 .builder() // private Builder

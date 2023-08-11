@@ -14,3 +14,7 @@ flyway:
 
 promotion:
   stock-strategy: optimistic #[oversell, sync, optimistic]
+
+order:
+  dataCenter: 1
+  machineNumber: 1

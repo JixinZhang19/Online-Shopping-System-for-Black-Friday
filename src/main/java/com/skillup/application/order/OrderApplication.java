@@ -1,6 +1,5 @@
 package com.skillup.application.order;
 
-import com.mysql.cj.x.protobuf.MysqlxCrud;
 import com.skillup.domain.order.OrderDomain;
 import com.skillup.domain.order.OrderService;
 import com.skillup.domain.order.util.OrderStatus;
@@ -8,6 +7,7 @@ import com.skillup.domain.promotion.PromotionDomain;
 import com.skillup.domain.promotion.PromotionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.Objects;
@@ -21,6 +21,7 @@ public class OrderApplication {
     @Autowired
     OrderService orderService;
 
+    @Transactional
     public OrderDomain createBuyNowOrder(OrderDomain orderDomain) {
         // 1. check promotion existing
         PromotionDomain promotionDomain = promotionService.getById(orderDomain.getPromotionId());

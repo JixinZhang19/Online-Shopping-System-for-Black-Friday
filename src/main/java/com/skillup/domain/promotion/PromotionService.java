@@ -4,6 +4,8 @@ import com.skillup.domain.promotion.stockStrategy.StockOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import java.util.List;
@@ -22,6 +24,7 @@ public class PromotionService {
         return domain;
     }
 
+    @Transactional(propagation = Propagation.REQUIRED)
     public PromotionDomain getById(String id) {
         return promotionRepository.getById(id);
     }
@@ -30,6 +33,7 @@ public class PromotionService {
         return promotionRepository.getByStatus(status);
     }
 
+    @Transactional(propagation = Propagation.REQUIRED)
     public boolean lockStock(String id) {
         return stockOperation.lockStock(id);
     }

@@ -6,13 +6,13 @@ import com.skillup.api.util.SkillUpCommon;
 import com.skillup.api.util.SnowFlake;
 import com.skillup.application.order.OrderApplication;
 import com.skillup.domain.order.OrderDomain;
+import com.skillup.domain.order.OrderService;
 import com.skillup.domain.order.util.OrderStatus;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.Objects;
 
 @RestController
 @RequestMapping("/order")
@@ -24,19 +24,29 @@ public class OrderController {
     @Autowired
     OrderApplication orderApplication;
 
+    @Autowired
+    OrderService orderService;
+
     @PostMapping
     public ResponseEntity<OrderOutDto> createBuyNowOrder(@RequestBody OrderInDto orderInDto) {
-        // todo: api return control
         OrderDomain orderDomain = orderApplication.createBuyNowOrder(toDomain(orderInDto));
-        //if (orderDomain.getOrderStatus().equals(OrderStatus.ITEM_ERROR)) {
-            return ResponseEntity
-                    .status(SkillUpCommon.SUCCESS)
-                    .body(toOrderOutDto(orderDomain));
-        //}
+        return ResponseEntity
+                .status(SkillUpCommon.SUCCESS)
+                .body(toOrderOutDto(orderDomain));
     }
 
-
-
+    @GetMapping("/id/{id}")
+    public ResponseEntity<OrderOutDto> getOrderById(@PathVariable("id") Long id) {
+        OrderDomain orderDomain = orderService.getOrderById(id);
+        if (Objects.isNull(orderDomain)) {
+            ResponseEntity
+                    .status(SkillUpCommon.BAD_REQUEST)
+                    .body(null);
+        }
+        return ResponseEntity
+                .status(SkillUpCommon.SUCCESS)
+                .body(toOrderOutDto(orderDomain));
+    }
 
 
 

@@ -4,6 +4,7 @@
 package com.skillup.infrastructure.jooq;
 
 
+import com.skillup.infrastructure.jooq.tables.Orders;
 import com.skillup.infrastructure.jooq.tables.Promotion;
 import com.skillup.infrastructure.jooq.tables.User;
 
@@ -27,6 +28,11 @@ public class Skillup extends SchemaImpl {
      * The reference instance of <code>skillup</code>
      */
     public static final Skillup SKILLUP = new Skillup();
+
+    /**
+     * The table <code>skillup.orders</code>.
+     */
+    public final Orders ORDERS = Orders.ORDERS;
 
     /**
      * The table <code>skillup.promotion</code>.
@@ -54,6 +60,7 @@ public class Skillup extends SchemaImpl {
     @Override
     public final List<Table<?>> getTables() {
         return Arrays.<Table<?>>asList(
+            Orders.ORDERS,
             Promotion.PROMOTION,
             User.USER);
     }

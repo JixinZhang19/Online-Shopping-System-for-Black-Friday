@@ -1,5 +1,7 @@
 package com.skillup.domain.order.util;
 
+import java.util.HashMap;
+
 public enum OrderStatus {
 
     // 订单状态
@@ -17,4 +19,14 @@ public enum OrderStatus {
         this.code = code;
     }
 
+    // 通过code获得OrderStatus
+    // record to domain 时需要
+    public static HashMap<Integer, OrderStatus> CACHE = new HashMap<Integer, OrderStatus>(){{
+        put(-2, ITEM_ERROR);
+        put(-1, OUT_OF_STOCK);
+        put(0, READY);
+        put(1, CREATED);
+        put(2, PAYED);
+        put(3, OVERTIME);
+    }};
 }

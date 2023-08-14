@@ -1,6 +1,7 @@
 package com.skillup.api;
 
 import com.skillup.api.dto.in.PromotionInDto;
+import com.skillup.api.dto.mapper.PromotionMapper;
 import com.skillup.api.dto.out.PromotionOutDto;
 import com.skillup.api.util.SkillUpCommon;
 import com.skillup.domain.promotion.PromotionDomain;
@@ -25,8 +26,8 @@ public class PromotionController {
 
     @PostMapping
     public PromotionOutDto createPromotion(@RequestBody PromotionInDto promotionInDto) {
-        PromotionDomain promotionDomain = promotionService.createPromotion(toDomain(promotionInDto));
-        return toOutDto(promotionDomain);
+        PromotionDomain promotionDomain = promotionService.createPromotion(PromotionMapper.INSTANCE.toDomain(promotionInDto));
+        return PromotionMapper.INSTANCE.toOutDto(promotionDomain);
     }
 
     @GetMapping("/id/{id}")
@@ -39,13 +40,14 @@ public class PromotionController {
         }
         return ResponseEntity
                 .status(SkillUpCommon.SUCCESS)
-                .body(toOutDto(promotionDomain));
+                .body(PromotionMapper.INSTANCE.toOutDto(promotionDomain));
     }
 
     @GetMapping("/status/{status}")
     public List<PromotionOutDto> getByStatus(@PathVariable("status") Integer status) {
         List<PromotionDomain> promotionDomainList = promotionService.getByStatus(status);
-        return promotionDomainList.stream().map(this::toOutDto).collect(Collectors.toList());
+        // return promotionDomainList.stream().map(this::toOutDto).collect(Collectors.toList());
+        return promotionDomainList.stream().map(PromotionMapper.INSTANCE::toOutDto).collect(Collectors.toList());
     }
 
     @PostMapping("/lock/id/{id}")
@@ -118,9 +120,8 @@ public class PromotionController {
 
 
 
-
-
     // general function
+/*
     private PromotionDomain toDomain(PromotionInDto inDto) {
         return PromotionDomain
                 .builder()
@@ -156,5 +157,6 @@ public class PromotionController {
                 .status(domain.getStatus())
                 .build();
     }
+*/
 
 }

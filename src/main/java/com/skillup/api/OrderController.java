@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.Objects;
 
 @RestController
@@ -28,7 +29,7 @@ public class OrderController {
     OrderService orderService;
 
     @PostMapping
-    public ResponseEntity<OrderOutDto> createBuyNowOrder(@RequestBody OrderInDto orderInDto) {
+    public ResponseEntity<OrderOutDto> createBuyNowOrder(@Valid @RequestBody OrderInDto orderInDto) {
         OrderDomain orderDomain = orderApplication.createBuyNowOrder(toDomain(orderInDto));
         return ResponseEntity
                 .status(SkillUpCommon.SUCCESS)
@@ -71,7 +72,7 @@ public class OrderController {
     private OrderOutDto toOrderOutDto(OrderDomain orderDomain) {
         return OrderOutDto
                 .builder()
-                .orderNumber(orderDomain.getOrderNumber())
+                .orderNumber(orderDomain.getOrderNumber().toString())
                 .userId(orderDomain.getUserId())
                 .promotionId(orderDomain.getPromotionId())
                 .promotionName(orderDomain.getPromotionName())

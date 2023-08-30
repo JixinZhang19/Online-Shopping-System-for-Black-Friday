@@ -1,4 +1,4 @@
-package com.skillup.domain.stock;
+package com.skillup.domain.stockCache;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -7,7 +7,7 @@ import lombok.Data;
 @Data
 @AllArgsConstructor
 @Builder
-public class StockDomain {
+public class StockCacheDomain {
     private String promotionId;
     private String availableStock;
 

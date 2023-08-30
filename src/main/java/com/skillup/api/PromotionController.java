@@ -4,15 +4,19 @@ import com.skillup.api.dto.in.PromotionInDto;
 import com.skillup.api.dto.mapper.PromotionMapper;
 import com.skillup.api.dto.out.PromotionOutDto;
 import com.skillup.api.util.SkillUpCommon;
+import com.skillup.application.promotion.PromotionApplication;
 import com.skillup.domain.promotion.PromotionDomain;
 import com.skillup.domain.promotion.PromotionService;
+import com.skillup.domain.promotionCache.PromotionCacheDomain;
+import com.skillup.domain.promotionCache.PromotionCacheService;
+import com.skillup.domain.stockCache.StockCacheDomain;
+import com.skillup.domain.stockCache.StockCacheService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Objects;
-import java.util.UUID;
 import java.util.stream.Collectors;
 
 @RestController
@@ -22,6 +26,14 @@ public class PromotionController {
     @Autowired
     PromotionService promotionService;
 
+    @Autowired
+    PromotionApplication promotionApplication;
+
+    @Autowired
+    PromotionCacheService promotionCacheService;
+
+    @Autowired
+    StockCacheService stockCacheService;
 
 
     @PostMapping
@@ -32,7 +44,8 @@ public class PromotionController {
 
     @GetMapping("/id/{id}")
     public ResponseEntity<PromotionOutDto> getById(@PathVariable("id") String id) {
-        PromotionDomain promotionDomain = promotionService.getById(id);
+        // cache aside read strategy
+        PromotionDomain promotionDomain = promotionApplication.getById(id);
         if (Objects.isNull(promotionDomain)) {
             return ResponseEntity
                     .status(SkillUpCommon.INTERNAL_ERROR)
@@ -52,15 +65,36 @@ public class PromotionController {
 
     @PostMapping("/lock/id/{id}")
     public ResponseEntity<Boolean> lockStock(@PathVariable("id") String id) {
+        // ---------------------- 数据库版本 ----------------------
         // 1. check promotion existing
-        PromotionDomain promotionDomain = promotionService.getById(id);
-        if (Objects.isNull(promotionDomain)) {
+        // PromotionDomain promotionDomain = promotionService.getById(id);
+        // if (Objects.isNull(promotionDomain)) {
+        //     return ResponseEntity
+        //             .status(SkillUpCommon.BAD_REQUEST)
+        //             .body(false);
+        // }
+        // 2.try to lock stock
+        // boolean isLocked = promotionService.lockStock(id);
+        // if (isLocked) {
+        //     return ResponseEntity
+        //             .status(SkillUpCommon.SUCCESS)
+        //             .body(true);
+        // }
+        // return ResponseEntity
+        //         .status(SkillUpCommon.SUCCESS)
+        //         .body(false);
+
+        // ---------------------- redis版本 ----------------------
+        // 1. check promotion existing in cache
+        PromotionCacheDomain promotionCacheDomain = promotionCacheService.getPromotionById(id);
+        if (Objects.isNull(promotionCacheDomain)) {
             return ResponseEntity
                     .status(SkillUpCommon.BAD_REQUEST)
                     .body(false);
         }
-        // 2.try to lock stock
-        boolean isLocked = promotionService.lockStock(id);
+        // 2. try to lock stock in cache
+        StockCacheDomain stockCacheDomain = StockCacheDomain.builder().promotionId(promotionCacheDomain.getPromotionId()).build();
+        boolean isLocked = stockCacheService.lockStock(stockCacheDomain);
         if (isLocked) {
             return ResponseEntity
                     .status(SkillUpCommon.SUCCESS)
@@ -73,15 +107,36 @@ public class PromotionController {
 
     @PostMapping("/revert/id/{id}")
     public ResponseEntity<Boolean> revertStock(@PathVariable("id") String id) {
+        // ---------------------- 数据库版本 ----------------------
         // 1. check promotion existing
-        PromotionDomain promotionDomain = promotionService.getById(id);
-        if (Objects.isNull(promotionDomain)) {
+        // PromotionDomain promotionDomain = promotionService.getById(id);
+        // if (Objects.isNull(promotionDomain)) {
+        //     return ResponseEntity
+        //             .status(SkillUpCommon.BAD_REQUEST)
+        //             .body(false);
+        // }
+        // 2. try to revert stock
+        // boolean isReverted = promotionService.revertStock(id);
+        // if (isReverted) {
+        //     return ResponseEntity
+        //             .status(SkillUpCommon.SUCCESS)
+        //             .body(true);
+        // }
+        // return ResponseEntity
+        //         .status(SkillUpCommon.SUCCESS)
+        //         .body(false);
+
+        // ---------------------- redis版本 ----------------------
+        // 1. check promotion existing in cache
+        PromotionCacheDomain promotionCacheDomain = promotionCacheService.getPromotionById(id);
+        if (Objects.isNull(promotionCacheDomain)) {
             return ResponseEntity
                     .status(SkillUpCommon.BAD_REQUEST)
                     .body(false);
         }
-        // 2.try to revert stock
-        boolean isReverted = promotionService.revertStock(id);
+        // 2. try to revert stock in cache
+        StockCacheDomain stockCacheDomain = StockCacheDomain.builder().promotionId(promotionCacheDomain.getPromotionId()).build();
+        boolean isReverted = stockCacheService.revertStock(stockCacheDomain);
         if (isReverted) {
             return ResponseEntity
                     .status(SkillUpCommon.SUCCESS)

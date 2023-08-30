@@ -4,7 +4,7 @@ import com.skillup.application.mapper.PromotionMapper;
 import com.skillup.domain.promotion.PromotionDomain;
 import com.skillup.domain.promotion.PromotionService;
 import com.skillup.domain.promotionCache.PromotionCacheService;
-import com.skillup.domain.stock.StockService;
+import com.skillup.domain.stockCache.StockCacheService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.ApplicationArguments;
@@ -20,7 +20,7 @@ public class PromotionPreHeatApplication implements ApplicationRunner {
     PromotionService promotionService;
 
     @Autowired
-    StockService stockService;
+    StockCacheService stockCacheService;
 
     @Autowired
     PromotionCacheService promotionCacheService;
@@ -32,7 +32,7 @@ public class PromotionPreHeatApplication implements ApplicationRunner {
         List<PromotionDomain> activePromotions = promotionService.getByStatus(1);
         activePromotions.forEach(promotionDomain -> {
             // 2. set available stock to cache
-            stockService.setAvailableStock(promotionDomain.getPromotionId(), promotionDomain.getAvailableStock());
+            stockCacheService.setAvailableStock(promotionDomain.getPromotionId(), promotionDomain.getAvailableStock());
             // 3. set promotion cache domain to cache
             promotionCacheService.setPromotion(PromotionMapper.INSTANCE.toCacheDomain(promotionDomain));
         });

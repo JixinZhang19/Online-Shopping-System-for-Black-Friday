@@ -3,20 +3,30 @@ package com.skillup.infrastructure.redis;
 import com.alibaba.fastjson2.JSON;
 import com.skillup.domain.promotionCache.PromotionCacheDomain;
 import com.skillup.domain.promotionCache.PromotionCacheRepository;
-import com.skillup.domain.stock.StockDomain;
-import com.skillup.domain.stock.StockRepository;
+import com.skillup.domain.stockCache.StockCacheDomain;
+import com.skillup.domain.stockCache.StockCacheRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.script.DefaultRedisScript;
+import org.springframework.scripting.support.ResourceScriptSource;
 import org.springframework.stereotype.Repository;
 
 
+import java.util.Collections;
 import java.util.Objects;
 
 @Repository
-public class RedisRepo implements StockRepository, PromotionCacheRepository {
+public class RedisRepo implements StockCacheRepository, PromotionCacheRepository {
 
     @Autowired
     RedisTemplate<String, String> redisTemplate;
+
+    @Autowired
+    DefaultRedisScript<Long> redisLockStockScript;
+
+    @Autowired
+    DefaultRedisScript<Long> redisRevertStockScript;
 
     public void set(String key, Object value) {
         redisTemplate.opsForValue().set(key, JSON.toJSONString(value));
@@ -38,7 +48,7 @@ public class RedisRepo implements StockRepository, PromotionCacheRepository {
     @Override
     public Long getPromotionAvailableStock(String promotionId) {
         // create stock key
-        String key = StockDomain.createStockKey(promotionId);
+        String key = StockCacheDomain.createStockKey(promotionId);
         // get stock by key
         return JSON.parseObject(get(key), Long.class);
     }
@@ -46,19 +56,51 @@ public class RedisRepo implements StockRepository, PromotionCacheRepository {
     @Override
     public void setPromotionAvailableStock(String promotionId, Long availableStock) {
         // create stock key
-        String key = StockDomain.createStockKey(promotionId);
+        String key = StockCacheDomain.createStockKey(promotionId);
         // set {key, stock}
         set(key, availableStock);
     }
 
     @Override
-    public boolean lockAvailableStock(StockDomain stockDomain) {
-        return false;
+    public boolean lockAvailableStock(StockCacheDomain stockCacheDomain) {
+        // 0 Lua script to ACID below operations
+        // 1 select form available_stock = ?
+        // 2 if available_stock > 0 then update available_stock = available_stock - 1
+        try {
+            Long stock = redisTemplate.execute(redisLockStockScript,
+                    Collections.singletonList(
+                            stockCacheDomain.createStockKey(stockCacheDomain.getPromotionId())
+                    ));
+            if (stock >= 0) {
+                return true;
+            } else {
+                // -1 means sold out, -2 means promotion doesn't exist
+                return false;
+            }
+        } catch (Throwable throwable) {
+            throw new RuntimeException(throwable);
+        }
     }
 
     @Override
-    public boolean revertAvailableStock(StockDomain stockDomain) {
-        return false;
+    public boolean revertAvailableStock(StockCacheDomain stockCacheDomain) {
+        // 0 Lua script to ACID below operations
+        // 1 select form available_stock = ?
+        // 2 if available_stock > 0 then update available_stock = available_stock - 1
+        try {
+            Long stock = redisTemplate.execute(redisRevertStockScript,
+                    Collections.singletonList(
+                            stockCacheDomain.createStockKey(stockCacheDomain.getPromotionId())
+                    ));
+            if (stock > 0) {
+                return true;
+            } else {
+                // -1 means sold out, -2 means promotion doesn't exist
+                return false;
+            }
+        } catch (Throwable throwable) {
+            throw new RuntimeException(throwable);
+        }
     }
 
     @Override

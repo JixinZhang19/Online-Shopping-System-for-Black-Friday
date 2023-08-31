@@ -54,7 +54,7 @@ public class PromotionApplication {
             stockCacheService.setAvailableStock(promotionDomain.getPromotionId(), availableStock);
         }
 
-        // 3. update stock onto available stock
+        // 3. update stock onto available stock in promotion
         cacheDomain.setAvailableStock(availableStock);
         return PromotionMapper.INSTANCE.toDomain(cacheDomain);
     }

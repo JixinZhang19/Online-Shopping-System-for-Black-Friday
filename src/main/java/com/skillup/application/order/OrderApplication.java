@@ -43,19 +43,20 @@ public class OrderApplication {
             orderDomain.setOrderStatus(OrderStatus.ITEM_ERROR);
             return orderDomain;
         }
+
         // 2. lock promotion stock in cache
         boolean isLocked = stockCacheService.lockStock(StockCacheDomain.builder().promotionId(orderDomain.getPromotionId()).build());
         if (!isLocked) {
             orderDomain.setOrderStatus(OrderStatus.OUT_OF_STOCK);
             return orderDomain;
         }
+
         // 3. fulfill some order detail (create time && status)
         orderDomain.setCreateTime(LocalDateTime.now());
         orderDomain.setOrderStatus(OrderStatus.CREATED);
 
-        // TODO: Send message to MQ
+        // 4. send create-order message to MQ
         mqSendRepository.sendMessageToTopic(createOrderTopic, JSON.toJSONString(orderDomain));
-
 
         return orderDomain;
     }

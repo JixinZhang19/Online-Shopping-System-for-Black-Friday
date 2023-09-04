@@ -33,7 +33,7 @@ public class JooqOrderRepo implements OrderRepository {
 
     @Override
     public void updateOrder(OrderDomain orderDomain) {
-
+        dslContext.executeUpdate(toRecord(orderDomain));
     }
 
     private OrderDomain toDomain(OrdersRecord record) {

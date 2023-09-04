@@ -50,6 +50,7 @@ promotion:
     deduct-stock-group: DS-G
 
 
+
 order:
   dataCenter: 1
   machineNumber: 1

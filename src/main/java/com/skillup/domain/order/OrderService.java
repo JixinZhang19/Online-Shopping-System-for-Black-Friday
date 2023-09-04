@@ -21,7 +21,9 @@ public class OrderService {
         return orderRepository.getOrderById(id);
     }
 
-
-
+    public OrderDomain updateOrder(OrderDomain orderDomain) {
+        orderRepository.updateOrder(orderDomain);
+        return orderDomain;
+    }
 
 }

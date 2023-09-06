@@ -26,15 +26,24 @@ public class JooqOrderRepo implements OrderRepository {
     }
 
     @Override
+    @Transactional(propagation = Propagation.REQUIRED)
     public OrderDomain getOrderById(Long id) {
+        // return dslContext.selectFrom(O_T).where(O_T.ORDER_NUMBER.eq(id))
+        //         .fetchOptional(this::toDomain).orElse(null);
+
+        // 加悲观锁
         return dslContext.selectFrom(O_T).where(O_T.ORDER_NUMBER.eq(id))
+                .forUpdate()
                 .fetchOptional(this::toDomain).orElse(null);
     }
 
     @Override
+    @Transactional(propagation = Propagation.REQUIRED)
     public void updateOrder(OrderDomain orderDomain) {
         dslContext.executeUpdate(toRecord(orderDomain));
     }
+
+
 
     private OrderDomain toDomain(OrdersRecord record) {
         return OrderDomain.builder()

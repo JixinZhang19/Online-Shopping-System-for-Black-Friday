@@ -1,28 +1,24 @@
-package com.skillup.application.order.consumer;
+package com.skillup.application.order.handler;
 
 import com.alibaba.fastjson2.JSON;
 import com.skillup.application.order.MqSendRepository;
+import com.skillup.application.order.event.PayCheckEvent;
 import com.skillup.domain.order.OrderDomain;
 import com.skillup.domain.order.OrderService;
 import com.skillup.domain.order.util.OrderStatus;
 import com.skillup.domain.stockCache.StockCacheDomain;
 import com.skillup.domain.stockCache.StockCacheService;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.rocketmq.common.message.MessageExt;
-import org.apache.rocketmq.spring.annotation.RocketMQMessageListener;
-import org.apache.rocketmq.spring.core.RocketMQListener;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.ApplicationListener;
 import org.springframework.stereotype.Component;
 
-import java.nio.charset.StandardCharsets;
 import java.util.Objects;
-
 
 @Slf4j
 @Component
-@RocketMQMessageListener(topic = "${order.topic.pay-check}", consumerGroup = "${order.topic.pay-check}")
-public class PayCheckConsumer implements RocketMQListener<MessageExt> {
+public class PayCheckEventHandler implements ApplicationListener<PayCheckEvent> {
 
     @Autowired
     OrderService orderService;
@@ -36,10 +32,11 @@ public class PayCheckConsumer implements RocketMQListener<MessageExt> {
     @Value("${promotion.topic.revert-stock}")
     String revertStockTopic;
 
+
     @Override
-    public void onMessage(MessageExt messageExt) {
-        String messageBody = new String(messageExt.getBody(), StandardCharsets.UTF_8);
-        OrderDomain orderDomain = JSON.parseObject(messageBody, OrderDomain.class);
+    public void onApplicationEvent(PayCheckEvent event) {
+
+        OrderDomain orderDomain = event.orderDomain;
 
         // 1. get newest orderDomain from database
         OrderDomain currentOrderDomain = orderService.getOrderById(orderDomain.getOrderNumber());
@@ -47,6 +44,7 @@ public class PayCheckConsumer implements RocketMQListener<MessageExt> {
             throw new RuntimeException("Order does not exist");
         }
 
+        // ※ keep idempotent: not necessary
         // 2. if unpaid: order status = 1 (created)
         if (currentOrderDomain.getOrderStatus().equals(OrderStatus.CREATED)) {
             // 2.1 set order status = 3 (overtime)
@@ -55,7 +53,7 @@ public class PayCheckConsumer implements RocketMQListener<MessageExt> {
             // 2.2 revert stock in redis
             StockCacheDomain stockCacheDomain = StockCacheDomain.builder().promotionId(currentOrderDomain.getPromotionId()).build();
             stockCacheService.revertStock(stockCacheDomain);
-            // 2.3 Send revert-stock to MySQL message to MQ
+            // 2.3 send revert-stock to MySQL message to MQ
             mqSendRepository.sendMessageToTopic(revertStockTopic, JSON.toJSONString(orderDomain));
         }
         // 3. if paid: order status = 2 (paid)

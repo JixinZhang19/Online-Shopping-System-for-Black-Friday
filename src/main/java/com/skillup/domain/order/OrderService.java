@@ -17,10 +17,12 @@ public class OrderService {
         return orderDomain;
     }
 
+    @Transactional(propagation = Propagation.REQUIRED)
     public OrderDomain getOrderById(Long id) {
         return orderRepository.getOrderById(id);
     }
 
+    @Transactional(propagation = Propagation.REQUIRED)
     public OrderDomain updateOrder(OrderDomain orderDomain) {
         orderRepository.updateOrder(orderDomain);
         return orderDomain;

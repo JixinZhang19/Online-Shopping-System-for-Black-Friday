@@ -7,9 +7,7 @@ import com.skillup.api.util.SkillUpCommon;
 import com.skillup.api.util.SkillUpResponse;
 import com.skillup.domain.user.UserDomain;
 import com.skillup.domain.user.UserService;
-import com.skillup.infrastructure.jooq.tables.User;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.RequestEntity;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 

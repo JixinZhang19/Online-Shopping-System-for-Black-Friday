@@ -1,6 +1,5 @@
 package com.skillup.infrastructure.repoImpl;
 
-import com.skillup.api.dto.in.UserInDto;
 import com.skillup.domain.user.UserDomain;
 import com.skillup.domain.user.UserRepository;
 import com.skillup.infrastructure.jooq.tables.User;
@@ -10,7 +9,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import java.util.Optional;
-import java.util.UUID;
 
 @Repository
 public class JooqUserRepo implements UserRepository {

@@ -1,6 +1,5 @@
 package com.skillup.domain.user;
 
-import com.skillup.infrastructure.jooq.tables.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

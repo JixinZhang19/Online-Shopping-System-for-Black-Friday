@@ -1,9 +1,5 @@
 package com.skillup.domain.promotion;
 
-import com.skillup.domain.promotion.PromotionDomain;
-import org.springframework.transaction.annotation.Propagation;
-import org.springframework.transaction.annotation.Transactional;
-
 import java.util.List;
 
 public interface PromotionRepository {

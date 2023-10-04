@@ -4,10 +4,12 @@
 package com.skillup.infrastructure.jooq;
 
 
+import com.skillup.infrastructure.jooq.tables.Commodity;
 import com.skillup.infrastructure.jooq.tables.Orders;
 import com.skillup.infrastructure.jooq.tables.Promotion;
 import com.skillup.infrastructure.jooq.tables.PromotionLog;
 import com.skillup.infrastructure.jooq.tables.User;
+import com.skillup.infrastructure.jooq.tables.records.CommodityRecord;
 import com.skillup.infrastructure.jooq.tables.records.OrdersRecord;
 import com.skillup.infrastructure.jooq.tables.records.PromotionLogRecord;
 import com.skillup.infrastructure.jooq.tables.records.PromotionRecord;
@@ -30,6 +32,7 @@ public class Keys {
     // UNIQUE and PRIMARY KEY definitions
     // -------------------------------------------------------------------------
 
+    public static final UniqueKey<CommodityRecord> KEY_COMMODITY_PRIMARY = Internal.createUniqueKey(Commodity.COMMODITY, DSL.name("KEY_commodity_PRIMARY"), new TableField[] { Commodity.COMMODITY.COMMODITY_ID }, true);
     public static final UniqueKey<OrdersRecord> KEY_ORDERS_PRIMARY = Internal.createUniqueKey(Orders.ORDERS, DSL.name("KEY_orders_PRIMARY"), new TableField[] { Orders.ORDERS.ORDER_NUMBER }, true);
     public static final UniqueKey<PromotionRecord> KEY_PROMOTION_PRIMARY = Internal.createUniqueKey(Promotion.PROMOTION, DSL.name("KEY_promotion_PRIMARY"), new TableField[] { Promotion.PROMOTION.PROMOTION_ID }, true);
     public static final UniqueKey<PromotionLogRecord> KEY_PROMOTION_LOG_PRIMARY = Internal.createUniqueKey(PromotionLog.PROMOTION_LOG, DSL.name("KEY_promotion_log_PRIMARY"), new TableField[] { PromotionLog.PROMOTION_LOG.ORDER_NUMBER, PromotionLog.PROMOTION_LOG.OPERATION_NAME }, true);

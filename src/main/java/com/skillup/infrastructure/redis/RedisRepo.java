@@ -6,10 +6,8 @@ import com.skillup.domain.promotionCache.PromotionCacheRepository;
 import com.skillup.domain.stockCache.StockCacheDomain;
 import com.skillup.domain.stockCache.StockCacheRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.io.ClassPathResource;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.script.DefaultRedisScript;
-import org.springframework.scripting.support.ResourceScriptSource;
 import org.springframework.stereotype.Repository;
 
 
@@ -37,7 +35,7 @@ public class RedisRepo implements StockCacheRepository, PromotionCacheRepository
         return redisTemplate.opsForValue().get(key);
     }
 
-    // delete 不太对，后序可以自己实现以下
+    // delete 不太对，后续可以自己实现一下
     /*
     public void delete(String key){
         if (Objects.isNull(key)) return;

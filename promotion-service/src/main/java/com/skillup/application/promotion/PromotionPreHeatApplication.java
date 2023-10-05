@@ -3,6 +3,7 @@ package com.skillup.application.promotion;
 import com.skillup.application.mapper.PromotionMapper;
 import com.skillup.domain.promotion.PromotionDomain;
 import com.skillup.domain.promotion.PromotionService;
+import com.skillup.domain.promotionCache.PromotionCacheDomain;
 import com.skillup.domain.promotionCache.PromotionCacheService;
 import com.skillup.domain.stockCache.StockCacheService;
 import lombok.extern.slf4j.Slf4j;

@@ -1,4 +1,4 @@
-package com.skillup.infrastructure.rocketMq.consumer;
+package src.main.java.com.skillup.infrastructure.rocketMq.consumer;
 
 import com.alibaba.fastjson2.JSON;
 import com.skillup.application.promotion.event.DeductStockEvent;

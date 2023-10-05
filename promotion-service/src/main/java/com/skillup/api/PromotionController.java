@@ -1,5 +1,6 @@
 package com.skillup.api;
 
+import com.fasterxml.jackson.core.PrettyPrinter;
 import com.skillup.api.dto.in.PromotionInDto;
 import com.skillup.api.dto.mapper.PromotionMapper;
 import com.skillup.api.dto.out.PromotionOutDto;
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Objects;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 @RestController
@@ -38,8 +40,9 @@ public class PromotionController {
 
     @PostMapping
     public PromotionOutDto createPromotion(@RequestBody PromotionInDto promotionInDto) {
-        PromotionDomain promotionDomain = promotionService.createPromotion(PromotionMapper.INSTANCE.toDomain(promotionInDto));
-        return PromotionMapper.INSTANCE.toOutDto(promotionDomain);
+        PromotionDomain promotionDomain = PromotionMapper.INSTANCE.toDomain(promotionInDto);
+        promotionDomain.setPromotionId(UUID.randomUUID().toString());
+        return PromotionMapper.INSTANCE.toOutDto(promotionService.createPromotion(promotionDomain));
     }
 
     @GetMapping("/id/{id}")

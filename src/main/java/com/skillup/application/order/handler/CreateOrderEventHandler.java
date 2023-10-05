@@ -1,4 +1,4 @@
-package com.skillup.application.order.handler;
+package src.main.java.com.skillup.application.order.handler;
 
 import com.alibaba.fastjson2.JSON;
 import com.skillup.application.order.MqSendRepository;

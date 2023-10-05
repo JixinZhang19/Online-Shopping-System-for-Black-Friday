@@ -1,4 +1,4 @@
-package com.skillup.infrastructure.repoImpl;
+package src.main.java.com.skillup.infrastructure.repoImpl;
 
 import com.skillup.domain.order.OrderDomain;
 import com.skillup.domain.order.OrderRepository;

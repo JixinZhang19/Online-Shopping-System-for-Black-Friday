@@ -1,0 +1,78 @@
+server:
+  port: 8803
+
+
+
+spring:
+  application:
+    name: promotion-service
+
+  cloud:
+    consul:
+      host: localhost
+      port: 8500
+      discovery: # 是否注册（默认为true）
+        register: true
+        # 服务名称
+        service-name: ${spring.application.name}
+        # 展示实例的ip（默认是false）
+        prefer-ip-address: true
+        # 实例id名称（默认是${spring.application.name}:comma,separated,profiles:${server.port}）
+        # instance-id: ${spring.application.name}
+
+  # mysql
+  datasource:
+    driverClassName: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/promotion-service?serverTimezone=GMT&useUnicode=true&characterEncoding=utf8&useSSL=true
+    username: root
+    password: rootroot
+
+  # Redis数据库索引（默认为0）
+  redis:
+    database: 0
+    host: localhost
+    port: 6379
+    # password
+    #客户端超时时间
+    timeout: 5000
+    pool:
+      max-active: 200
+      # 连接池最大阻塞等待时间（使用负值表示没有限制）
+      max-wait: -1
+      # 连接池中的最大空闲连接
+      max-idle: 8
+      # 连接池中的最小空闲连接
+      min-idle: 0
+
+  #spring-session 使用
+  session.store-type: none
+
+
+
+flyway:
+  baseline-on-migrate: true
+  enabled: true
+
+
+
+promotion:
+  stock-strategy: optimistic #[oversell, sync, optimistic]
+  topic:
+    lock-stock: lock-stock
+    lock-stock-group: LS-G
+    revert-stock: revert-stock
+    revert-stock-group: RS-G
+    deduct-stock: deduct-stock
+    deduct-stock-group: DS-G
+
+
+
+# rocketmq配置信息
+rocketmq:
+  # rocketmq服务接入地址
+  name-server: localhost:9876
+  # Consumer 配置项
+  consumer:
+    listeners: # 配置某个消费分组，是否监听指定 Topic 。结构为 Map<消费者分组, <Topic, Boolean>> 。默认情况下，不配置表示监听。
+      test-consumer-group:
+        topic1: false # 关闭 test-consumer-group 对 topic1 的监听消费

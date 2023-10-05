@@ -12,6 +12,7 @@
         <module>template</module>
         <module>user-service</module>
         <module>commodity-service</module>
+        <module>promotion-service</module>
     </modules>
 
     <properties>

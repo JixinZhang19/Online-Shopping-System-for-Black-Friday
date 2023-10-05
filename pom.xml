@@ -15,6 +15,7 @@
         <module>promotion-service</module>
         <module>order-service-1</module>
         <module>frontend-service</module>
+        <module>gateway-service</module>
     </modules>
 
     <properties>

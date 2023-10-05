@@ -1,0 +1,21 @@
+server:
+  port: 8804
+
+
+
+spring:
+  application:
+    name: frontend-service
+
+  cloud:
+    consul:
+      host: localhost
+      port: 8500
+      discovery: # 是否注册（默认为true）
+        register: true
+        # 服务名称
+        service-name: ${spring.application.name}
+        # 展示实例的ip（默认是false）
+        prefer-ip-address: true
+        # 实例id名称（默认是${spring.application.name}:comma,separated,profiles:${server.port}）
+        # instance-id: ${spring.application.name}

@@ -1,4 +1,4 @@
-package com.skillup;
+package src.main.java.com.skillup;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

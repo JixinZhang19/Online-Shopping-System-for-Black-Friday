@@ -10,6 +10,7 @@
     <packaging>pom</packaging>
     <modules>
         <module>template</module>
+        <module>user-service</module>
     </modules>
 
     <properties>
@@ -80,6 +81,7 @@
             <dependency>
                 <groupId>org.jooq</groupId>
                 <artifactId>jooq-codegen</artifactId>
+                <version>3.14.16</version>
                 <scope>provided</scope>
             </dependency>
 

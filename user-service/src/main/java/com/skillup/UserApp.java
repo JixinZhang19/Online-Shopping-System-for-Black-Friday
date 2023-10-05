@@ -10,6 +10,6 @@ import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 public class UserApp {
     public static void main(String[] args) {
         SpringApplication.run(UserApp.class, args);
-        System.out.println("Hello World!");
+        System.out.println("UserApp");
     }
 }

@@ -1,6 +1,5 @@
 package com.skillup.api;
 
-import com.fasterxml.jackson.core.PrettyPrinter;
 import com.skillup.api.dto.in.PromotionInDto;
 import com.skillup.api.dto.mapper.PromotionMapper;
 import com.skillup.api.dto.out.PromotionOutDto;
@@ -66,8 +65,8 @@ public class PromotionController {
         return promotionDomainList.stream().map(PromotionMapper.INSTANCE::toOutDto).collect(Collectors.toList());
     }
 
-    @PostMapping("/lock/id/{id}")
-    public ResponseEntity<Boolean> lockStock(@PathVariable("id") String id) {
+    @PostMapping("/lock/id/{id}/orderId/{orderId}")
+    public ResponseEntity<Boolean> lockStock(@PathVariable("id") String id, @PathVariable("orderId") Long orderId) {
         // ---------------------- 数据库版本 ----------------------
         // 1. check promotion existing
         // PromotionDomain promotionDomain = promotionService.getById(id);
@@ -108,8 +107,8 @@ public class PromotionController {
                 .body(false);
     }
 
-    @PostMapping("/revert/id/{id}")
-    public ResponseEntity<Boolean> revertStock(@PathVariable("id") String id) {
+    @PostMapping("/revert/id/{id}/orderId/{orderId}")
+    public ResponseEntity<Boolean> revertStock(@PathVariable("id") String id, @PathVariable("orderId") Long orderId) {
         // ---------------------- 数据库版本 ----------------------
         // 1. check promotion existing
         // PromotionDomain promotionDomain = promotionService.getById(id);

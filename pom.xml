@@ -13,6 +13,7 @@
         <module>user-service</module>
         <module>commodity-service</module>
         <module>promotion-service</module>
+        <module>order-service-1</module>
     </modules>
 
     <properties>

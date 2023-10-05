@@ -11,6 +11,7 @@
     <modules>
         <module>template</module>
         <module>user-service</module>
+        <module>commodity-service</module>
     </modules>
 
     <properties>

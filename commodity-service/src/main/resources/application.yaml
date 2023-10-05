@@ -1,0 +1,34 @@
+server:
+  port: 8802
+
+
+
+spring:
+  application:
+    name: commodity-service
+
+  cloud:
+    consul:
+      host: localhost
+      port: 8500
+      discovery: # 是否注册（默认为true）
+        register: true
+        # 服务名称
+        service-name: ${spring.application.name}
+        # 展示实例的ip（默认是false）
+        prefer-ip-address: true
+        # 实例id名称（默认是${spring.application.name}:comma,separated,profiles:${server.port}）
+        # instance-id: ${spring.application.name}
+
+  # mysql
+  datasource:
+    driverClassName: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/commodity-service?serverTimezone=GMT&useUnicode=true&characterEncoding=utf8&useSSL=true
+    username: root
+    password: rootroot
+
+
+
+flyway:
+  baseline-on-migrate: true
+  enabled: true

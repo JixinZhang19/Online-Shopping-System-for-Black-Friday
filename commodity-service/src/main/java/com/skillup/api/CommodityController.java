@@ -5,7 +5,6 @@ import com.skillup.api.dto.out.CommodityOutDto;
 import com.skillup.api.util.SkillUpCommon;
 import com.skillup.api.util.SkillUpResponse;
 import com.skillup.domain.commodity.CommodityDomain;
-import com.skillup.domain.commodity.CommodityRepository;
 import com.skillup.domain.commodity.CommodityService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;

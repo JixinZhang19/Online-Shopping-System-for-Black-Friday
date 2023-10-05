@@ -1,4 +1,4 @@
-package com.skillup.infrastructure.repoImpl;
+package com.skillup.infrastructure.repolmpl;
 
 import com.skillup.domain.commodity.CommodityDomain;
 import com.skillup.domain.commodity.CommodityRepository;

@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>com.skillup</groupId>
+        <artifactId>skillup-ecom-plat</artifactId>
+        <version>1.0-SNAPSHOT</version>
+    </parent>
+
+    <artifactId>template</artifactId>
+
+    <properties>
+        <maven.compiler.source>20</maven.compiler.source>
+        <maven.compiler.target>20</maven.compiler.target>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    </properties>
+
+    <dependencies>
+    </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.jooq</groupId>
+                <artifactId>jooq-codegen-maven</artifactId>
+                <version>3.14.16</version>
+                <executions>
+                    <execution>
+                        <goals>
+                            <!-- 目标generate用于生成Java代码 -->
+                            <goal>generate</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <!-- JOOQ单独配置JDBC链接 -->
+                    <jdbc>
+                        <driver>com.mysql.cj.jdbc.Driver</driver>
+                        <url>jdbc:mysql://localhost:3306/skillup?serverTimezone=GMT</url>
+                        <user>root</user>
+                        <password>rootroot</password>
+                    </jdbc>
+                    <generator>
+                        <!-- 代码生成器 -->
+                        <!--<name>org.jooq.util.JavaGenerator</name>-->
+                        <name>org.jooq.codegen.JavaGenerator</name>
+                        <database>
+                            <!--下面这两行是为view也生成代码的关键，不需要view不用配置-->
+                            <!--force generating id'sfor everything in public schema, that has an 'id' field-->
+                            <!--                            <syntheticPrimaryKeys>public\..*\.id</syntheticPrimaryKeys>-->
+                            <!--name for fake primary key-->
+                            <!--                            <overridePrimaryKeys>override_primmary_key</overridePrimaryKeys>-->
+
+                            <!--<name>org.jooq.util.mysql.MySQLDatabase</name>-->
+                            <name>org.jooq.meta.mysql.MySQLDatabase</name>
+
+                            <!--include和exclude用于控制为数据库中哪些表生成代码-->
+                            <includes>.*</includes>
+                            <!-- excludes不同表之间用竖杠分隔-->
+                            <excludes>
+                                flyway_schema_history
+                            </excludes>
+
+                            <!--数据库名称-->
+                            <inputSchema>skillup</inputSchema>
+                        </database>
+
+                        <generate>
+                            <!--生成dao和pojo-->
+                            <!--                            <daos>true</daos>-->
+                            <!--                            <pojos>true</pojos>-->
+                            <!--把数据库时间类型映射到java 8时间类型-->
+                            <javaTimeTypes>true</javaTimeTypes>
+                            <!--<interfaces>true</interfaces>-->
+                            <!--不在生成的代码中添加spring注释，比如@Repository-->
+                            <springAnnotations>ture</springAnnotations>
+                        </generate>
+
+                        <target>
+                            <!--生成代码文件的包名及放置目录-->
+                            <packageName>com.skillup.infrastructure.jooq</packageName>
+                            <directory>src/main/java</directory>
+                        </target>
+                    </generator>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+
+
+
+</project>

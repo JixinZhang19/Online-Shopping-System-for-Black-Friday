@@ -1,6 +1,5 @@
 package com.skillup.application.promotion.handler;
 
-import com.skillup.application.promotion.event.LockStockEvent;
 import com.skillup.application.promotion.event.RevertStockEvent;
 import com.skillup.domain.order.OrderDomain;
 import com.skillup.domain.promotion.PromotionService;
@@ -9,12 +8,14 @@ import com.skillup.domain.promotionStockLog.PromotionStockLogService;
 import com.skillup.domain.util.OperationName;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationListener;
+import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.Objects;
 
+@Component
 public class RevertStockHandler implements ApplicationListener<RevertStockEvent> {
 
     @Autowired

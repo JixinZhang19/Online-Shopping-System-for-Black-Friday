@@ -34,7 +34,6 @@ public class RevertStockConsumer implements RocketMQListener<MessageExt> {
         String messageBody = new String(messageExt.getBody(), StandardCharsets.UTF_8);
         OrderDomain orderDomain = JSON.parseObject(messageBody, OrderDomain.class);
 
-
         // create event
         RevertStockEvent revertStockEvent = new RevertStockEvent(this, orderDomain);
         // publish event

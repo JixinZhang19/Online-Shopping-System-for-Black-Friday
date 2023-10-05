@@ -11,6 +11,7 @@ import org.springframework.data.redis.core.script.DefaultRedisScript;
 import org.springframework.stereotype.Repository;
 
 
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Objects;
 
@@ -65,9 +66,18 @@ public class RedisRepo implements StockCacheRepository, PromotionCacheRepository
         // 1 select form available_stock = ?
         // 2 if available_stock > 0 then update available_stock = available_stock - 1
         try {
+            /*
             Long stock = redisTemplate.execute(redisLockStockScript,
                     Collections.singletonList(
                             stockCacheDomain.createStockKey(stockCacheDomain.getPromotionId())
+                    ));
+
+             */
+            Long stock = redisTemplate.execute(redisLockStockScript,
+                    Arrays.asList(
+                            stockCacheDomain.createStockKey(stockCacheDomain.getPromotionId()),
+                            stockCacheDomain.getOrderId().toString(),
+                            stockCacheDomain.getOperationName().toString()
                     ));
             if (stock >= 0) {
                 return true;
@@ -86,9 +96,17 @@ public class RedisRepo implements StockCacheRepository, PromotionCacheRepository
         // 1 select form available_stock = ?
         // 2 if available_stock > 0 then update available_stock = available_stock - 1
         try {
+            /*
             Long stock = redisTemplate.execute(redisRevertStockScript,
                     Collections.singletonList(
                             stockCacheDomain.createStockKey(stockCacheDomain.getPromotionId())
+                    ));
+             */
+            Long stock = redisTemplate.execute(redisRevertStockScript,
+                    Arrays.asList(
+                            stockCacheDomain.createStockKey(stockCacheDomain.getPromotionId()),
+                            stockCacheDomain.getOrderId().toString(),
+                            stockCacheDomain.getOperationName().toString()
                     ));
             if (stock > 0) {
                 return true;

@@ -11,6 +11,7 @@ import com.skillup.domain.promotionCache.PromotionCacheDomain;
 import com.skillup.domain.promotionCache.PromotionCacheService;
 import com.skillup.domain.stockCache.StockCacheDomain;
 import com.skillup.domain.stockCache.StockCacheService;
+import com.skillup.domain.util.OperationName;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -95,7 +96,11 @@ public class PromotionController {
                     .body(false);
         }
         // 2. try to lock stock in cache
-        StockCacheDomain stockCacheDomain = StockCacheDomain.builder().promotionId(promotionCacheDomain.getPromotionId()).build();
+        StockCacheDomain stockCacheDomain = StockCacheDomain.builder()
+                .promotionId(promotionCacheDomain.getPromotionId())
+                .orderId(orderId)
+                .operationName(OperationName.LOCK_STOCK)
+                .build();
         boolean isLocked = stockCacheService.lockStock(stockCacheDomain);
         if (isLocked) {
             return ResponseEntity
@@ -137,7 +142,11 @@ public class PromotionController {
                     .body(false);
         }
         // 2. try to revert stock in cache
-        StockCacheDomain stockCacheDomain = StockCacheDomain.builder().promotionId(promotionCacheDomain.getPromotionId()).build();
+        StockCacheDomain stockCacheDomain = StockCacheDomain.builder()
+                .promotionId(promotionCacheDomain.getPromotionId())
+                .orderId(orderId)
+                .operationName(OperationName.REVERT_STOCK)
+                .build();
         boolean isReverted = stockCacheService.revertStock(stockCacheDomain);
         if (isReverted) {
             return ResponseEntity

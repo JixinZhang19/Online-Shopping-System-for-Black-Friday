@@ -4,22 +4,52 @@
 --- DateTime: 2023/8/30 16:59
 ---
 
--- KEYS[1]: PROMOTION_promotionId_STOCK
+-- version 1
+-- KEYS: [PROMOTION_promotionId_STOCK]
 
--- 1. check promotion stock (key) existing
+-- -- 1. check promotion stock existing
+-- if redis.call('exists', KEYS[1]) == 1
+-- then
+--     -- 2. get value by key
+--     local stock = tonumber(redis.call('get', KEYS[1]));
+--     -- 3. if stock > 0 then lock stock
+--     if (stock > 0)
+--     then
+--         redis.call('set', KEYS[1], stock-1);
+--         return stock-1;
+--     end
+--     -- 4. invalid handle
+--     return -1;
+-- end
+-- -- 5. promotion not exist
+-- return -2;
+
+
+
+
+-- version 2: keep idempotent
+-- KEYS: [PROMOTION_promotionId_STOCK] [ORDER_NUM] [OPERATION_NAME]
+
+-- 1. check promotion stock existing
 if redis.call('exists', KEYS[1]) == 1
 then
-    -- 2. get value by key
+    -- 2. idempotent: if key-value order_num-lock_stock exists, then return directly
+    if redis.call('exists', KEYS[2]) == 1 and redis.call('get', KEYS[2]) == KEYS[3]
+    then
+        return redis.call('get', KEYS[1]);
+    end
+    -- 3. get available_stock
     local stock = tonumber(redis.call('get', KEYS[1]));
-    -- 3. stock > 0 then lock stock
+    -- 4. validate available_stock > 0
     if (stock > 0)
-
-        then
+    then
+        -- 5. lock stock
         redis.call('set', KEYS[1], stock-1);
+        redis.call('set', KEYS[2], KEYS[3]);
         return stock-1;
     end
-    -- 4. sold out
+    -- 6. invalid handle
     return -1;
 end
--- 5. key not exist
+-- 7. promotion not exist
 return -2;

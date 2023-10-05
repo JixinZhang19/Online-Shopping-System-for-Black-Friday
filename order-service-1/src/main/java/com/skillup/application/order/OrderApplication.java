@@ -44,7 +44,8 @@ public class OrderApplication {
     @Transactional
     public OrderDomain createBuyNowOrder(OrderDomain orderDomain) {
 
-        // TODO: keep idempotent when using microservice
+        // ※ keep idempotent when using microservice (redis idempotent, multi same order-requests but redis lock/revert-stock only operates once)
+
         // 1. check promotion existing in cache by cache aside strategy
         /*
         PromotionDomain promotionDomain = promotionApplication.getById(orderDomain.getPromotionId());

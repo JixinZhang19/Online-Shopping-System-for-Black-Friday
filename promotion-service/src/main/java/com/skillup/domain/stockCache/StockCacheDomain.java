@@ -1,14 +1,23 @@
 package com.skillup.domain.stockCache;
 
+import com.skillup.domain.util.OperationName;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
+@NoArgsConstructor
 @AllArgsConstructor
 @Builder
 public class StockCacheDomain {
+
     private String promotionId;
+
+    private Long orderId;
+
+    private OperationName operationName;
+
     private String availableStock;
 
     public static final String PROMOTION_PREFIX = "PROMOTION_";

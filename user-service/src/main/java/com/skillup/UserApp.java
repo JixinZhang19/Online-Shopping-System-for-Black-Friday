@@ -7,9 +7,9 @@ import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 
 @SpringBootApplication
 @EnableDiscoveryClient
-public class UserService {
+public class UserApp {
     public static void main(String[] args) {
-        SpringApplication.run(UserService.class, args);
+        SpringApplication.run(UserApp.class, args);
         System.out.println("Hello World!");
     }
 }

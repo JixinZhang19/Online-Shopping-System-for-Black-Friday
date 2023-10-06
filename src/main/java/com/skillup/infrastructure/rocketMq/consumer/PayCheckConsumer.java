@@ -15,7 +15,7 @@ import java.nio.charset.StandardCharsets;
 
 
 @Component
-@RocketMQMessageListener(topic = "${order.topic.pay-check}", consumerGroup = "${order.topic.pay-check}")
+@RocketMQMessageListener(topic = "${order.topic.pay-check}", consumerGroup = "${order.topic.pay-check-order}")
 public class PayCheckConsumer implements RocketMQListener<MessageExt> {
 
     @Autowired

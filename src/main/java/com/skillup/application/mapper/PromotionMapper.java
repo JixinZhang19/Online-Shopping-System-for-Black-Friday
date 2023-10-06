@@ -10,6 +10,7 @@ import org.mapstruct.factory.Mappers;
 public interface PromotionMapper {
     PromotionMapper INSTANCE = Mappers.getMapper(PromotionMapper.class);
 
+    @Mapping(source = "promotionName", target = "promotionName")
     PromotionCacheDomain toCacheDomain(PromotionDomain promotionDomain);
 
     PromotionDomain toDomain(PromotionCacheDomain promotionCacheDomain);

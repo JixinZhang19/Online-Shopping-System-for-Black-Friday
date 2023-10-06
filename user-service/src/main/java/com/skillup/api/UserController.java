@@ -141,6 +141,8 @@ public class UserController {
         // 2.2 if password matches, return 200
         return ResponseEntity
                 .status(SkillUpCommon.SUCCESS)
+                .header("Access-Control-Expose-Headers", "mark")
+                .header("mark", shardingKey(userDomain.getUserId()))
                 .body(
                         SkillUpResponse
                                 .builder()
@@ -200,7 +202,7 @@ public class UserController {
 
 
     // general function
-    public UserDomain toDomain(UserInDto userInDto) {
+    private UserDomain toDomain(UserInDto userInDto) {
         return UserDomain
                 .builder() // private Builder
                 .userId(UUID.randomUUID().toString())
@@ -209,12 +211,23 @@ public class UserController {
                 .build();
     }
 
-    public UserOutDto toOutDto(UserDomain userDomain) {
+    private UserOutDto toOutDto(UserDomain userDomain) {
         return UserOutDto
                 .builder()
                 .userId(userDomain.getUserId())
                 .userName(userDomain.getUserName())
                 .build();
+    }
+
+    private String shardingKey(String userId) {
+        char[] chars = userId.toCharArray();
+        for (int i = chars.length - 1; i >= 0; i--) {
+            if (Character.isDigit(chars[i])) {
+                char target = chars[i];
+                return String.valueOf(target % 2 == 0 ? 2 : 1);
+            }
+        }
+        return "1";
     }
 
 }

@@ -31,6 +31,7 @@ public class OrderController {
 
     @PostMapping
     public ResponseEntity<OrderOutDto> createBuyNowOrder(@Valid @RequestBody OrderInDto orderInDto) {
+        System.out.println("-------- order service 1.1 createBuyNowOrder --------");
         OrderDomain orderDomain = orderApplication.createBuyNowOrder(toDomain(orderInDto));
         return ResponseEntity
                 .status(SkillUpCommon.SUCCESS)
@@ -39,6 +40,7 @@ public class OrderController {
 
     @GetMapping("/id/{id}")
     public ResponseEntity<OrderOutDto> getOrderById(@PathVariable("id") Long id) {
+        System.out.println("-------- order service 1.1 getOrderById ---------");
         OrderDomain orderDomain = orderService.getOrderById(id);
         if (Objects.isNull(orderDomain)) {
             ResponseEntity
@@ -52,6 +54,7 @@ public class OrderController {
 
     @PatchMapping("/pay")
     public ResponseEntity<OrderOutDto> payBuyNowOrder(@RequestBody OrderStatusInDto orderStatusInDto) {
+        System.out.println("-------- order service 1.1 payBuyNowOrder ---------");
         OrderDomain orderDomain = orderApplication.payBuyNowOrder(orderStatusInDto.getOrderNumber(), orderStatusInDto.getExistStatus(), orderStatusInDto.getExpectStatus());
 
         if (Objects.isNull(orderDomain)) {
